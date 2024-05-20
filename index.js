@@ -51,7 +51,7 @@ app.post("/api/sensors", function (req, res) {
   // newItem.save().then((item) => res.json(item));
   console.log(req.body);
 
-  res.json(req.body);
+  res.json("Success!");
 });
 
 // start the server @localhost:5000
