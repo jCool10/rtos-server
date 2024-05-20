@@ -35,6 +35,10 @@ app.get("/api/sensors", function (req, res) {
     .catch((err) => console.log(err));
 });
 
+app.get("/", (req, res) => {
+  res.send("Hello World");
+});
+
 // handle post requests
 app.post("/api/sensors", function (req, res) {
   // create new item using the schema
