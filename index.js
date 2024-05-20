@@ -42,14 +42,16 @@ app.get("/", (req, res) => {
 // handle post requests
 app.post("/api/sensors", function (req, res) {
   // create new item using the schema
-  const newItem = new Item({
-    temp: req.body.temp,
-    hum: req.body.hum,
-    light: req.body.light,
-  });
+  // const newItem = new Item({
+  //   temp: req.body.temp,
+  //   hum: req.body.hum,
+  //   light: req.body.light,
+  // });
   // save value to database
-  newItem.save().then((item) => res.json(item));
+  // newItem.save().then((item) => res.json(item));
   console.log(req.body);
+
+  res.json(req.body);
 });
 
 // start the server @localhost:5000
