@@ -39,6 +39,11 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
+app.post("/api/warning", function (req, res) {
+  console.log(req.body);
+  res.json("Success!");
+});
+
 // handle post requests
 app.post("/api/sensors", function (req, res) {
   // create new item using the schema
