@@ -9,23 +9,29 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 // the scheme of the item to be saved in database
-const itemSchema = new Schema({
-  temp: {
-    type: String,
-    required: true,
+const itemSchema = new Schema(
+  {
+    temp: {
+      type: String,
+      required: true,
+    },
+    hum: {
+      type: String,
+      required: true,
+    },
+    distance: {
+      type: String,
+      required: true,
+    },
+    rain: {
+      type: String,
+      required: true,
+    },
   },
-  hum: {
-    type: String,
-    required: true,
-  },
-  light: {
-    type: String,
-    required: true,
-  },
-  date: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
-module.exports = Item = mongoose.model("item", itemSchema);
+// module.exports = Item = mongoose.model("item", itemSchema);
+module.exports = mongoose.model("item", itemSchema);

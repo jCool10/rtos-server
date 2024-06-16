@@ -1,15 +1,10 @@
-/*
-    Code    : Sensor data visualization (Backend)
-    Author  : Atick Faisal
-    License : MIT
-    Date    : 19.07.2019
-*/
-
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const Item = require("./models/item");
 const path = require("path");
+const nodemailer = require("nodemailer");
+const ItemModel = require("./models/item");
 // const mongoURI = require("./config/key").admin;
 
 const mongoURI =
@@ -21,45 +16,66 @@ mongoose
   .then(() => console.log("MongoDB connected..."))
   .catch((err) => console.log(err));
 
+let transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false, // true for 465, false for other ports
+  auth: {
+    user: "fanclubofythientv@gmail.com",
+    pass: "fyev qkwb hepp dngu",
+  },
+});
+
+let mailOptions = {
+  from: "no113pro@gmail.com",
+  to: "hngloc10@gmail.com", // Danh sách các địa chỉ người nhận
+  subject: "Chủ đề thư", // Tiêu đề thư
+  text: "Nội dung thư dạng text", // Nội dung thư dạng text
+  html: "<Chúng tôi đang theo dõi chặt chẽ tình hình thời tiết, và các báo cáo mới nhất từ Trung tâm Khí tượng Thủy văn cho biết một trận mưa lớn đang hình thành và có khả năng gây ra lũ lụt nghiêm trọng trong khu vực của chúng ta trong vòng 24-48 giờ tới. Mực nước dự kiến sẽ tăng nhanh và có thể vượt quá mức báo động.", // Nội dung thư dạng HTML
+};
+
+const sendEmail = () => {
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
+};
+
 const app = express();
 
 // use body-parser middleware
 app.use(bodyParser.json());
 
-// handle get reuests
-// sends the last 7 values
-// react app sensds this get request
-app.get("/api/sensors", function (req, res) {
-  Item.find()
-    .then((items) => res.json(items.slice(items.length - 6, items.length)))
-    .catch((err) => console.log(err));
-});
-
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
-app.post("/api/warning", function (req, res) {
-  console.log(req.body);
-  res.json("Success!");
-});
-
 // handle post requests
-app.post("/api/sensors", function (req, res) {
-  // create new item using the schema
-  // const newItem = new Item({
-  //   temp: req.body.temp,
-  //   hum: req.body.hum,
-  //   light: req.body.light,
-  // });
-  // save value to database
-  // newItem.save().then((item) => res.json(item));
+app.post("/api/sensors", async function (req, res) {
   console.log(req.body);
+
+  const body = req.body;
+  const data = body.data.split("-");
+
+  const [distance, rain, tem, hum] = data;
+
+  if (distance < 10 && rain > 50) {
+    sendEmail();
+  }
+
+  await ItemModel.create({
+    temp: tem,
+    hum: hum,
+    distance: distance,
+    rain: rain,
+  });
 
   res.json("Success!");
 });
 
-// start the server @localhost:5000
 const port = process.env.PORT || 5000;
 app.listen(port, function () {
   console.log(`Server started on port ${port}`);
