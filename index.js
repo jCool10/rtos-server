@@ -53,6 +53,11 @@ app.get("/", (req, res) => {
   res.send("Hello World");
 });
 
+app.get("/api/sensors", async (req, res) => {
+  const items = await Item.find();
+  res.json(items);
+});
+
 // handle post requests
 app.post("/api/sensors", async function (req, res) {
   console.log(req.body);
