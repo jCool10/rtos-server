@@ -5,6 +5,7 @@ const Item = require("./models/item");
 const path = require("path");
 const nodemailer = require("nodemailer");
 const ItemModel = require("./models/item");
+const cors = require("cors");
 // const mongoURI = require("./config/key").admin;
 
 const mongoURI =
@@ -48,6 +49,12 @@ const app = express();
 
 // use body-parser middleware
 app.use(bodyParser.json());
+app.use(
+  cors({
+    origin: ["http://localhost:5173"],
+    credentials: true,
+  })
+);
 
 app.get("/", (req, res) => {
   res.send("Hello World");
