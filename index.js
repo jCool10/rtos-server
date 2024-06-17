@@ -65,6 +65,12 @@ app.get("/api/sensors", async (req, res) => {
   res.json(items);
 });
 
+app.get("/api/data", async (req, res) => {
+  // Lấy 30 giá trị mới nhất sắp xếp theo giá trị create
+  const items = await ItemModel.find().sort({ create: -1 }).limit(30);
+  res.json(items);
+});
+
 // handle post requests
 app.post("/api/sensors", async function (req, res) {
   console.log(req.body);
